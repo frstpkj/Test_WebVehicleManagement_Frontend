@@ -6,7 +6,7 @@ interface BaseReturnType<T = any> {
   message: T;
 }
 
-interface UpdateResponse {
+interface AddResponse {
   message: string;
   data: any;
 }
@@ -20,8 +20,8 @@ class TsVehicleRepository {
     });
   }
 
-  async addVehicle(body: any): Promise<UpdateResponse> {
-    const response = await this.axios.post<BaseReturnType<UpdateResponse>>(
+  async addVehicle(body: any): Promise<AddResponse> {
+    const response = await this.axios.post<BaseReturnType<AddResponse>>(
       `/vehicle/`,
       body
     );
@@ -35,12 +35,15 @@ export async function POST(req: NextRequest, ctx: any) {
 
     const repo = new TsVehicleRepository();
     const session = await repo.addVehicle(body);
-    return NextResponse.json(session);
+    return NextResponse.json({ message: session });
   } catch (error: any) {
     if (error instanceof AxiosError) {
-      return NextResponse.json(error.response?.data, {
-        status: error.response?.status,
-      });
+      return NextResponse.json(
+        { message: error.response?.data?.message },
+        {
+          status: error.response?.status,
+        }
+      );
     }
     const e = error.toString();
     return NextResponse.json({ error: e }, { status: 500 });

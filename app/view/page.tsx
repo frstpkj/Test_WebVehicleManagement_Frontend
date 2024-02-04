@@ -36,68 +36,17 @@ const columns: TableProps<DataType>["columns"] = [
     dataIndex: "etc",
     key: "etc",
   },
-  // {
-  //   title: "Tags",
-  //   key: "tags",
-  //   dataIndex: "tags",
-  //   render: (_, { tags }) => (
-  //     <>
-  //       {tags.map((tag) => {
-  //         let color = tag.length > 5 ? "geekblue" : "green";
-  //         if (tag === "loser") {
-  //           color = "volcano";
-  //         }
-  //         return (
-  //           <Tag color={color} key={tag}>
-  //             {tag.toUpperCase()}
-  //           </Tag>
-  //         );
-  //       })}
-  //     </>
-  //   ),
-  // },
-  // {
-  //   title: "Action",
-  //   key: "action",
-  //   render: (_, record) => (
-  //     <Space size="middle">
-  //       <a>Invite {record.name}</a>
-  //       <a>Delete</a>
-  //     </Space>
-  //   ),
-  // },
 ];
-
-//   {
-//     key: "1",
-//     name: "John Brown",
-//     age: 32,
-//     address: "New York No. 1 Lake Park",
-//     tags: ["nice", "developer"],
-//   },
-//   {
-//     key: "2",
-//     name: "Jim Green",
-//     age: 42,
-//     address: "London No. 1 Lake Park",
-//     tags: ["loser"],
-//   },
-//   {
-//     key: "3",
-//     name: "Joe Black",
-//     age: 32,
-//     address: "Sydney No. 1 Lake Park",
-//     tags: ["cool", "teacher"],
-//   },
-// ];
 
 export default function viewVehicle() {
   const [tableData, setTableData] = useState<TableProps<DataType> | any>();
+  const [loading, setLoading] = useState(true);
   const { Title } = Typography;
-  var vehicleClientAPI = new vehicleClient();
+  const vehicleClientAPI = new vehicleClient();
 
   vehicleClientAPI.getAllVehicle().then((res: any) => {
     setTableData(res);
+    setLoading(false);
   });
 
   return (
@@ -108,7 +57,7 @@ export default function viewVehicle() {
       </Row>
 
       <Col sm={12} offset={6}>
-        <Table columns={columns} dataSource={tableData} />
+        <Table columns={columns} dataSource={tableData} loading={loading} />
       </Col>
     </>
   );
